@@ -26,41 +26,42 @@ typedef struct {
     int entryTime;
     int serviceTime;
     int remainingTime;
+    int position;
 
     process_state_t state;
 
 }pcb_t;
 
-int main(int argc, char*argv[]){
-
-    char buffer[100];
-    char *name_of_file;
-    pcb_t processes[10];
-
-
-    FILE *fileid = fopen("process.txt", "r");
-    if (fileid < 0)
-    {
-        perror("The file could not be opened");
-    }
-fscanf(fileid, "%s %d %d", processes[0].process_name, & processes[0].entryTime, &processes[0].serviceTime);
-
-
-
-int number = 1;
-while (fgets(buffer, sizeof(buffer), fileid) != NULL)
+void sort(pcb_t processes[], int number)
 {
+    int entry_temp = 0;
+    int service_temp = 0;
+    char temp [100];
+    for (int i = 0; i < number - 1; i ++)
+    {
+        for(int j = 0; j< number-i-1; j++)
+        {
 
-    fscanf(fileid, "%s %d %d", processes[number].process_name, & processes[number].entryTime, & processes[number].serviceTime);
+            if(processes[j].entryTime > processes[j+1].entryTime)
+            {
+                entry_temp = processes[i].entryTime;
+                processes[j].entryTime = processes[j+1].entryTime;
+                processes[j+1].entryTime = service_temp;
 
+                service_temp = processes[j+1].serviceTime;
+                processes[j].serviceTime = processes[j+1].serviceTime;
+                processes[j+1].serviceTime = service_temp;
 
-    number = number + 1;
-}
-number = number - 1;
+                strcpy(temp, processes[j].process_name);
+                strcpy(processes[j].process_name,processes[j+1].process_name);
+                strcpy(processes[j+1].process_name, temp);
 
-fclose(fileid);
-sort(processes,number);
-fcfs(processes,number);
+            }
+
+        }
+
+    }
+
 
 }
 
@@ -126,39 +127,51 @@ void fcfs(pcb_t processes[], int number)
 
     }
 
-
-void sort(pcb_t, processes[], int number)
-{
-    int entry_temp = 0;
-    int service_temp = 0;
-    char temp [100];
-    for (int i = 0; i < number - 1; i ++)
-    {
-        for(int j = 0; j< number-i-1; j++)
-        {
-
-            if(processes[j].entryTime > processes[j+1].entryTime)
-            {
-                entry_temp = processes[i].entryTime;
-                processes[j].entryTime = processes[j+1].entryTime;
-                processes[j+1].entryTime = service_temp;
-
-                service_temp = processes[j+1].serviceTime;
-                processes[j].serviceTime = processes[j+1].serviceTime;
-                processes[j+1].serviceTime = service_temp;
-
-                strcpy(temp, processes[j].process_name);
-                strcpy(processes[j].process_name,processes[j+1].process_name);
-                strcpy(processes[j+1].process_name, temp);
-
-            }
-
-        }
-
-    }
-
-
-}
 waitExit();
 
 }
+
+int main(int argc, char*argv[]){
+
+    char buffer[100];
+    char *name_of_file;
+    pcb_t processes[10];
+
+    if (argc==2)
+    {
+        name_of_file = argv[1];
+
+    }
+    else
+    {
+        name_of_file = "process-data.txt";
+    }
+
+    FILE *fileid = fopen("process.txt", "r");
+    if (fileid < 0)
+    {
+        perror("The file could not be opened");
+    }
+    fscanf(fileid, "%s %d %d", processes[0].process_name, & processes[0].entryTime, &processes[0].serviceTime);
+
+
+
+    int number = 1;
+    while (fgets(buffer, sizeof(buffer), fileid) != NULL)
+    {
+
+    fscanf(fileid, "%s %d %d", processes[number].process_name, & processes[number].entryTime, & processes[number].serviceTime);
+    number = number + 1;
+    processes[number].position = number;
+    }
+    number = number - 1;
+    fclose(fileid);
+
+    sort(processes,number);
+
+    fcfs(processes,number);
+
+}
+
+
+
