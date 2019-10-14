@@ -179,7 +179,7 @@ int main(int argc, char*argv[]) // Main Program.
 
 void process_sort(pcb_t processes[], int number)
 // This function sorts the array containing the processes according to the entry time using
-// bubble sorting algorithm.
+// bubble sorting algorithm defintion.
 {
     int entry_temp = 0; // Temporary variable to sort the entry time of the process
     int service_temp = 0; // Temporary variable to sort the service time of the process.
