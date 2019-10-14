@@ -69,8 +69,8 @@ void fcfs(pcb_t processes[], int number)
 
 
 {
-    char *color_one = "Red";
-    char *color_two = "White";
+    char *color_one = "red";
+    char *color_two = "fuchisa";
     initInterface(color_one,color_two);
     int Time = 0;
     processes[0].state = READY;
